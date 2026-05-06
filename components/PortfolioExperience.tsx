@@ -1,7 +1,7 @@
 "use client";
 
 import type { CSSProperties, ReactNode } from "react";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import { ArrowUpRight, Mail, Menu, X } from "lucide-react";
 import {
@@ -11,6 +11,8 @@ import {
   useTransform,
   type Variants
 } from "framer-motion";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { urlForImage } from "@/lib/sanity/image";
 import type {
   EditableImage,
@@ -18,6 +20,8 @@ import type {
   PortfolioPage,
   Project
 } from "@/lib/content/types";
+
+gsap.registerPlugin(ScrollTrigger);
 
 type PortfolioExperienceProps = {
   page: PortfolioPage;
@@ -78,7 +82,7 @@ function SectionIntro({
 }) {
   return (
     <motion.div
-      className="mx-auto mb-10 grid max-w-7xl gap-5 px-5 sm:px-8 lg:grid-cols-[0.74fr_1fr] lg:px-10"
+      className="section-reveal mx-auto mb-10 grid max-w-7xl gap-5 px-5 sm:px-8 lg:grid-cols-[0.74fr_1fr] lg:px-10"
       variants={stagger}
       initial="hidden"
       whileInView="show"
@@ -114,7 +118,7 @@ function MotionSection({
   children: ReactNode;
 }) {
   return (
-    <section id={id} className={className}>
+    <section id={id} className={`motion-section ${className || ""}`}>
       {children}
     </section>
   );
@@ -125,9 +129,9 @@ function Marquee({ items }: { items: string[] }) {
   const repeated = useMemo(() => [...items, ...items], [items]);
 
   return (
-    <div className="overflow-hidden border-y border-[var(--line)] bg-[#090908]">
+    <div className="marquee-track overflow-hidden border-y border-[var(--line)] bg-[#090908]">
       <motion.div
-        className="flex w-max items-center gap-3 py-4"
+        className="marquee-content flex w-max items-center gap-3 py-4"
         animate={shouldReduceMotion ? undefined : { x: ["0%", "-50%"] }}
         transition={{
           duration: 28,
@@ -154,11 +158,11 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
 
   return (
     <motion.article
-      className="group relative flex min-h-full flex-col overflow-hidden rounded-[6px] border border-[var(--line)] bg-[#10100f] shelf-shadow"
+      className="project-card group relative flex min-h-full flex-col overflow-hidden rounded-[6px] border border-[var(--line)] bg-[#10100f] shelf-shadow will-change-transform"
       style={style}
       variants={fadeUp}
-      whileHover={{ y: -8 }}
-      transition={{ duration: 0.24 }}
+      whileHover={{ y: -10, rotateX: 1.5, rotateY: -1.5 }}
+      transition={{ duration: 0.34, ease: [0.22, 1, 0.36, 1] }}
     >
       <a className="focus-ring block h-full" {...linkProps(project.link)}>
         <div className="relative aspect-[4/3] overflow-hidden border-b border-[var(--line)] bg-[#171715]">
@@ -166,13 +170,13 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
             src={imageSrc(project.image, 1200, 900)}
             alt={project.image?.alt || project.title}
             fill
-            className="object-cover transition duration-700 group-hover:scale-105"
+            className="project-image object-cover transition duration-700 ease-out group-hover:scale-110"
             sizes="(min-width: 1024px) 33vw, 100vw"
             style={{
               objectPosition: projectPositions[index % projectPositions.length]
             }}
           />
-          <div className="absolute inset-0 product-sheen opacity-70" />
+          <div className="absolute inset-0 product-sheen opacity-70 transition duration-700 group-hover:opacity-100" />
           <div
             className="absolute left-4 top-4 h-10 w-10 border border-black/30"
             style={{ backgroundColor: accent }}
@@ -202,7 +206,7 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
             ))}
           </div>
           {project.link?.label ? (
-            <span className="inline-flex w-fit items-center gap-2 border-b border-[var(--accent)] pb-1 text-sm font-black uppercase text-[var(--ink)]">
+            <span className="inline-flex w-fit items-center gap-2 border-b border-[var(--accent)] pb-1 text-sm font-black uppercase text-[var(--ink)] transition duration-300 group-hover:gap-3 group-hover:text-[var(--yellow)]">
               {project.link.label}
               <ArrowUpRight aria-hidden className="h-4 w-4" />
             </span>
@@ -215,13 +219,129 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
 
 export function PortfolioExperience({ page }: PortfolioExperienceProps) {
   const [menuOpen, setMenuOpen] = useState(false);
+  const rootRef = useRef<HTMLElement | null>(null);
   const { scrollYProgress } = useScroll();
   const scaleX = useTransform(scrollYProgress, [0, 1], [0, 1]);
   const heroImage = imageSrc(page.hero.image, 2200, 1400);
   const aboutImage = imageSrc(page.about.image, 1400, 1200);
+  const shouldReduceMotion = useReducedMotion();
+
+  useEffect(() => {
+    const root = rootRef.current;
+
+    if (!root || shouldReduceMotion) {
+      return undefined;
+    }
+
+    const ctx = gsap.context(() => {
+      gsap.from(".hero-reveal", {
+        autoAlpha: 0,
+        y: 44,
+        duration: 1,
+        ease: "power3.out",
+        stagger: 0.12,
+        delay: 0.1
+      });
+
+      gsap.to(".hero-artwork", {
+        yPercent: 9,
+        scale: 1.06,
+        ease: "none",
+        scrollTrigger: {
+          trigger: ".hero-section",
+          start: "top top",
+          end: "bottom top",
+          scrub: 0.8
+        }
+      });
+
+      gsap.utils.toArray<HTMLElement>(".section-reveal").forEach((section) => {
+        gsap.from(section, {
+          autoAlpha: 0,
+          y: 42,
+          duration: 0.9,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: section,
+            start: "top 82%",
+            once: true
+          }
+        });
+      });
+
+      gsap.utils.toArray<HTMLElement>(".image-parallax").forEach((image) => {
+        gsap.to(image, {
+          yPercent: -8,
+          scale: 1.05,
+          ease: "none",
+          scrollTrigger: {
+            trigger: image,
+            start: "top bottom",
+            end: "bottom top",
+            scrub: 0.9
+          }
+        });
+      });
+
+      gsap.from(".service-card", {
+        autoAlpha: 0,
+        y: 36,
+        duration: 0.72,
+        ease: "power3.out",
+        stagger: 0.08,
+        scrollTrigger: {
+          trigger: "#services",
+          start: "top 72%",
+          once: true
+        }
+      });
+
+      gsap.from(".project-card", {
+        autoAlpha: 0,
+        y: 46,
+        rotateX: 5,
+        duration: 0.85,
+        ease: "power3.out",
+        stagger: 0.12,
+        scrollTrigger: {
+          trigger: "#projects",
+          start: "top 72%",
+          once: true
+        }
+      });
+
+      gsap.from(".experience-row", {
+        autoAlpha: 0,
+        y: 28,
+        duration: 0.72,
+        ease: "power3.out",
+        stagger: 0.08,
+        scrollTrigger: {
+          trigger: "#experience",
+          start: "top 72%",
+          once: true
+        }
+      });
+
+      gsap.to(".marquee-content", {
+        xPercent: -12,
+        ease: "none",
+        scrollTrigger: {
+          trigger: ".marquee-track",
+          start: "top bottom",
+          end: "bottom top",
+          scrub: 1
+        }
+      });
+
+      ScrollTrigger.refresh();
+    }, root);
+
+    return () => ctx.revert();
+  }, [shouldReduceMotion]);
 
   return (
-    <main className="min-h-screen bg-[#050505] text-[var(--ink)]">
+    <main ref={rootRef} className="min-h-screen bg-[#050505] text-[var(--ink)]">
       <motion.div
         aria-hidden
         className="fixed left-0 top-0 z-[70] h-1 w-full origin-left bg-[var(--yellow)]"
@@ -242,7 +362,7 @@ export function PortfolioExperience({ page }: PortfolioExperienceProps) {
           <div className="hidden items-center gap-1 lg:flex">
             {page.navItems.map((item) => (
               <a
-                className="focus-ring px-4 py-2 text-xs font-black uppercase text-[var(--muted)] transition hover:bg-white/10 hover:text-[var(--ink)]"
+                className="focus-ring relative px-4 py-2 text-xs font-black uppercase text-[var(--muted)] transition duration-300 after:absolute after:inset-x-4 after:bottom-1 after:h-px after:origin-left after:scale-x-0 after:bg-[var(--yellow)] after:transition-transform after:duration-300 hover:bg-white/10 hover:text-[var(--ink)] hover:after:scale-x-100"
                 href={item.anchor}
                 key={`${item.label}-${item.anchor}`}
               >
@@ -252,7 +372,7 @@ export function PortfolioExperience({ page }: PortfolioExperienceProps) {
           </div>
 
           <a
-            className="focus-ring hidden items-center gap-2 border border-[var(--line)] bg-[var(--ink)] px-4 py-2 text-sm font-black uppercase text-[#050505] transition hover:bg-[var(--yellow)] lg:inline-flex"
+            className="focus-ring hidden items-center gap-2 border border-[var(--line)] bg-[var(--ink)] px-4 py-2 text-sm font-black uppercase text-[#050505] transition duration-300 hover:-translate-y-0.5 hover:bg-[var(--yellow)] hover:shadow-[0_16px_40px_rgba(243,198,35,0.16)] lg:inline-flex"
             {...linkProps(page.contact.primaryCta)}
           >
             {page.contact.primaryCta.label}
@@ -288,7 +408,7 @@ export function PortfolioExperience({ page }: PortfolioExperienceProps) {
       </header>
 
       <section
-        className="relative isolate overflow-hidden border-b border-[var(--line)]"
+        className="hero-section relative isolate overflow-hidden border-b border-[var(--line)]"
         id="top"
       >
         <Image
@@ -296,7 +416,7 @@ export function PortfolioExperience({ page }: PortfolioExperienceProps) {
           alt={page.hero.image?.alt || page.brandName}
           fill
           priority
-          className="absolute inset-0 -z-20 object-cover"
+          className="hero-artwork absolute inset-0 -z-20 object-cover will-change-transform"
           sizes="100vw"
         />
         <div className="absolute inset-0 -z-10 bg-[#050505]/70" />
@@ -310,36 +430,36 @@ export function PortfolioExperience({ page }: PortfolioExperienceProps) {
             animate="show"
           >
             <motion.p
-              className="mb-5 w-fit border border-white/20 bg-[#050505]/70 px-3 py-2 text-xs font-black uppercase text-[var(--yellow)] backdrop-blur"
+              className="hero-reveal mb-5 w-fit border border-white/20 bg-[#050505]/70 px-3 py-2 text-xs font-black uppercase text-[var(--yellow)] backdrop-blur"
               variants={fadeUp}
             >
               {page.hero.eyebrow}
             </motion.p>
             <motion.h1
-              className="font-display text-5xl leading-[0.98] text-[var(--ink)] sm:text-7xl lg:text-8xl"
+              className="hero-reveal font-display text-5xl leading-[0.98] text-[var(--ink)] sm:text-7xl lg:text-8xl"
               variants={fadeUp}
             >
               {page.hero.headline}
             </motion.h1>
             <motion.p
-              className="mt-6 max-w-3xl text-base leading-7 text-[#e6ded0] sm:text-xl sm:leading-8"
+              className="hero-reveal mt-6 max-w-3xl text-base leading-7 text-[#e6ded0] sm:text-xl sm:leading-8"
               variants={fadeUp}
             >
               {page.hero.subheadline}
             </motion.p>
             <motion.div
-              className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap"
+              className="hero-reveal mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap"
               variants={fadeUp}
             >
               <a
-                className="focus-ring inline-flex items-center justify-center gap-2 border border-[var(--ink)] bg-[var(--ink)] px-5 py-3 text-sm font-black uppercase text-[#050505] transition hover:bg-[var(--yellow)]"
+                className="focus-ring inline-flex items-center justify-center gap-2 border border-[var(--ink)] bg-[var(--ink)] px-5 py-3 text-sm font-black uppercase text-[#050505] transition duration-300 hover:-translate-y-0.5 hover:bg-[var(--yellow)] hover:shadow-[0_18px_44px_rgba(243,198,35,0.18)]"
                 {...linkProps(page.hero.primaryCta)}
               >
                 {page.hero.primaryCta.label}
                 <ArrowUpRight aria-hidden className="h-4 w-4" />
               </a>
               <a
-                className="focus-ring inline-flex items-center justify-center gap-2 border border-white/25 bg-[#050505]/70 px-5 py-3 text-sm font-black uppercase text-[var(--ink)] backdrop-blur transition hover:bg-white/10"
+                className="focus-ring inline-flex items-center justify-center gap-2 border border-white/25 bg-[#050505]/70 px-5 py-3 text-sm font-black uppercase text-[var(--ink)] backdrop-blur transition duration-300 hover:-translate-y-0.5 hover:bg-white/10"
                 {...linkProps(page.hero.secondaryCta)}
               >
                 {page.hero.secondaryCta.label}
@@ -376,7 +496,7 @@ export function PortfolioExperience({ page }: PortfolioExperienceProps) {
         />
         <div className="mx-auto grid max-w-7xl gap-6 px-5 sm:px-8 lg:grid-cols-[0.92fr_1.08fr] lg:px-10">
           <motion.div
-            className="relative min-h-[420px] overflow-hidden border border-[var(--line)] bg-[#11110f] shelf-shadow"
+            className="section-reveal relative min-h-[420px] overflow-hidden border border-[var(--line)] bg-[#11110f] shelf-shadow"
             initial={{ opacity: 0, y: 24 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7 }}
@@ -386,7 +506,7 @@ export function PortfolioExperience({ page }: PortfolioExperienceProps) {
               src={aboutImage}
               alt={page.about.image?.alt || page.about.title}
               fill
-              className="object-cover"
+              className="image-parallax object-cover will-change-transform"
               sizes="(min-width: 1024px) 46vw, 100vw"
               style={{ objectPosition: "left center" }}
             />
@@ -394,7 +514,7 @@ export function PortfolioExperience({ page }: PortfolioExperienceProps) {
           </motion.div>
 
           <motion.div
-            className="grid gap-4"
+            className="section-reveal grid gap-4"
             variants={stagger}
             initial="hidden"
             whileInView="show"
@@ -402,7 +522,7 @@ export function PortfolioExperience({ page }: PortfolioExperienceProps) {
           >
             {page.about.callouts.map((callout, index) => (
               <motion.div
-                className="grid gap-3 border border-[var(--line)] bg-[#10100f] p-5 sm:grid-cols-[0.36fr_1fr] sm:p-6"
+                className="grid gap-3 border border-[var(--line)] bg-[#10100f] p-5 transition duration-300 hover:-translate-y-1 hover:border-white/30 sm:grid-cols-[0.36fr_1fr] sm:p-6"
                 key={`${callout.value}-${index}`}
                 variants={fadeUp}
               >
@@ -433,7 +553,7 @@ export function PortfolioExperience({ page }: PortfolioExperienceProps) {
         >
           {page.services.items.map((service, index) => (
             <motion.article
-              className="group relative min-h-[360px] overflow-hidden rounded-[6px] border border-[var(--line)] bg-[#11110f] p-5 transition hover:border-white/40 sm:p-6"
+              className="service-card group relative min-h-[360px] overflow-hidden rounded-[6px] border border-[var(--line)] bg-[#11110f] p-5 transition duration-500 hover:-translate-y-1.5 hover:border-white/40 hover:shadow-[0_30px_70px_rgba(0,0,0,0.34)] sm:p-6"
               key={`${service.title}-${index}`}
               variants={fadeUp}
             >
@@ -506,7 +626,7 @@ export function PortfolioExperience({ page }: PortfolioExperienceProps) {
         >
           {page.experience.items.map((item, index) => (
             <motion.article
-              className="grid gap-4 border-t border-[var(--line)] py-7 last:border-b md:grid-cols-[0.32fr_0.42fr_1fr]"
+              className="experience-row grid gap-4 border-t border-[var(--line)] py-7 transition duration-300 hover:border-white/30 last:border-b md:grid-cols-[0.32fr_0.42fr_1fr]"
               key={item._id || `${item.role}-${index}`}
               variants={fadeUp}
             >
@@ -536,7 +656,7 @@ export function PortfolioExperience({ page }: PortfolioExperienceProps) {
                   ))}
                   {item.link?.label ? (
                     <a
-                      className="focus-ring inline-flex items-center gap-1 border-b border-[var(--green)] text-xs font-black uppercase text-[var(--ink)]"
+                      className="focus-ring inline-flex items-center gap-1 border-b border-[var(--green)] text-xs font-black uppercase text-[var(--ink)] transition duration-300 hover:gap-2 hover:text-[var(--yellow)]"
                       {...linkProps(item.link)}
                     >
                       {item.link.label}
@@ -577,7 +697,7 @@ export function PortfolioExperience({ page }: PortfolioExperienceProps) {
               {page.contact.description}
             </motion.p>
             <motion.a
-              className="focus-ring mt-8 inline-flex items-center gap-2 border border-[var(--ink)] bg-[var(--ink)] px-5 py-3 text-sm font-black uppercase text-[#050505] transition hover:bg-[var(--yellow)]"
+              className="focus-ring mt-8 inline-flex items-center gap-2 border border-[var(--ink)] bg-[var(--ink)] px-5 py-3 text-sm font-black uppercase text-[#050505] transition duration-300 hover:-translate-y-0.5 hover:bg-[var(--yellow)] hover:shadow-[0_18px_44px_rgba(243,198,35,0.18)]"
               variants={fadeUp}
               {...linkProps(page.contact.primaryCta)}
             >
@@ -587,7 +707,7 @@ export function PortfolioExperience({ page }: PortfolioExperienceProps) {
           </motion.div>
 
           <motion.div
-            className="border border-[var(--line)] bg-[#10100f] p-5 shelf-shadow sm:p-6"
+            className="section-reveal border border-[var(--line)] bg-[#10100f] p-5 shelf-shadow sm:p-6"
             initial={{ opacity: 0, y: 24 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7 }}
@@ -604,7 +724,7 @@ export function PortfolioExperience({ page }: PortfolioExperienceProps) {
             <div className="divide-y divide-[var(--line)]">
               {page.contact.channels.map((channel) => (
                 <a
-                  className="focus-ring flex items-center justify-between gap-4 py-5 text-[var(--ink)] transition hover:text-[var(--yellow)]"
+                  className="focus-ring flex items-center justify-between gap-4 py-5 text-[var(--ink)] transition duration-300 hover:translate-x-1 hover:text-[var(--yellow)]"
                   href={channel.href}
                   key={`${channel.label}-${channel.href}`}
                   rel={/^https?:\/\//.test(channel.href) ? "noreferrer" : undefined}
@@ -634,7 +754,7 @@ export function PortfolioExperience({ page }: PortfolioExperienceProps) {
           <div className="flex flex-wrap gap-2">
             {page.footer.links.map((link) => (
               <a
-                className="focus-ring border border-[var(--line)] px-3 py-2 text-xs font-black uppercase text-[var(--ink)] transition hover:bg-white/10"
+                className="focus-ring border border-[var(--line)] px-3 py-2 text-xs font-black uppercase text-[var(--ink)] transition duration-300 hover:-translate-y-0.5 hover:bg-white/10"
                 key={`${link.label}-${link.href}`}
                 {...linkProps(link)}
               >

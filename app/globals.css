@@ -22,6 +22,20 @@ html {
   background: var(--paper);
 }
 
+html.lenis-smooth {
+  scroll-behavior: auto;
+}
+
+html.lenis-smooth body {
+  overscroll-behavior: none;
+}
+
+html.lenis-smooth [data-lenis-prevent],
+html.lenis-smooth [data-lenis-prevent-wheel],
+html.lenis-smooth [data-lenis-prevent-touch] {
+  overscroll-behavior: contain;
+}
+
 body {
   margin: 0;
   background:
@@ -70,12 +84,26 @@ select {
     linear-gradient(180deg, rgba(255, 255, 255, 0.07), transparent 58%);
 }
 
+.hero-artwork,
+.image-parallax,
+.project-image {
+  transform-origin: center;
+}
+
+.project-card {
+  transform-style: preserve-3d;
+}
+
 .focus-ring:focus-visible {
   outline: 2px solid var(--yellow);
   outline-offset: 4px;
 }
 
 @media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
   *,
   *::before,
   *::after {
@@ -83,5 +111,11 @@ select {
     animation-iteration-count: 1 !important;
     scroll-behavior: auto !important;
     transition-duration: 0.01ms !important;
+  }
+}
+
+@media (max-width: 767px) {
+  .project-card {
+    transform-style: flat;
   }
 }
