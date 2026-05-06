@@ -3,11 +3,11 @@ import type { PortfolioPage } from "./types";
 const marketImage = "/portfolio-market.png";
 
 export const fallbackPortfolioPage: PortfolioPage = {
-  seoTitle: "Alex Carter | Product-minded creative developer",
+  seoTitle: "Alex Carter | Data Analyst & AI Generalist",
   seoDescription:
-    "A modern personal portfolio for a design engineer, powered by Next.js, Sanity, Tailwind CSS, and Framer Motion.",
+    "A retro AI office portfolio for a data analyst and AI consultant helping teams automate workflows, build dashboards, and make better decisions.",
   brandName: "Alex Carter",
-  brandTagline: "Design engineer and launch partner",
+  brandTagline: "Data Analyst / AI Generalist",
   navItems: [
     { label: "About", anchor: "#about" },
     { label: "Services", anchor: "#services" },
@@ -16,84 +16,86 @@ export const fallbackPortfolioPage: PortfolioPage = {
     { label: "Contact", anchor: "#contact" }
   ],
   hero: {
-    eyebrow: "Open late for ambitious launches",
-    headline: "Alex Carter stocks bold digital products with a human pulse.",
+    eyebrow: "Retro AI Office now processing",
+    headline: "I turn messy business data into AI-powered operating systems.",
     subheadline:
-      "A personal portfolio for a hands-on creative technologist who turns fuzzy product ideas into polished websites, brand systems, and launch-ready experiences.",
-    primaryCta: { label: "Start a Project", href: "mailto:hello@example.com" },
-    secondaryCta: { label: "Browse the Shelf", href: "#projects" },
+      "I help businesses implement AI, automate workflows, build data pipelines, create dashboards, and improve decision-making with practical analytics systems.",
+    primaryCta: { label: "Send a Brief", href: "mailto:hello@example.com" },
+    secondaryCta: { label: "Tour Services", href: "#services" },
     image: {
       fallbackSrc: marketImage,
       alt: "Original dark editorial shelf of fictional creative products"
     },
     stats: [
-      { value: "10+", label: "years shipping digital products" },
-      { value: "42", label: "launches packaged with care" },
-      { value: "3", label: "sweet spots: strategy, design, code" }
+      { value: "AI", label: "workflow automation and practical agents" },
+      { value: "BI", label: "dashboards, metrics, and decision systems" },
+      { value: "ELT", label: "pipelines from raw tools to clean reporting" }
     ],
     marquee: [
-      "Product strategy",
-      "Editorial web design",
-      "Frontend systems",
-      "Sanity CMS",
-      "Motion details",
-      "Launch support"
+      "AI automation",
+      "Data pipelines",
+      "Executive dashboards",
+      "Workflow systems",
+      "CRM cleanup",
+      "Forecasting",
+      "RAG assistants",
+      "Decision intelligence"
     ]
   },
   about: {
-    eyebrow: "Behind the counter",
-    title: "Part strategist, part designer, part code-floor closer.",
+    eyebrow: "Employee record",
+    title: "Part analyst, part systems thinker, part AI implementation desk.",
     body:
-      "I build premium web experiences for founders, studios, and teams that need the craft of a boutique shop with the speed of a launch room. The work blends sharp positioning, tactile interfaces, accessible frontend systems, and CMS workflows clients can actually use.",
+      "I work with founders and teams who know their operations could be smarter, but need someone to connect the dots between business process, data quality, dashboards, and AI automation. My work is practical: clean inputs, useful interfaces, human review, and measurable time saved.",
     image: {
       fallbackSrc: marketImage,
       alt: "Shelf detail with original portfolio packaging imagery"
     },
     callouts: [
-      { value: "Taste", label: "Editorial direction, hierarchy, and brand feel" },
-      { value: "Systems", label: "Reusable components, clean content models, resilient UI" },
-      { value: "Momentum", label: "Fast prototypes that survive the real launch" }
+      { value: "Audit", label: "Map business workflows, data sources, gaps, and automation opportunities." },
+      { value: "Build", label: "Create pipelines, dashboards, AI assistants, and repeatable operating systems." },
+      { value: "Adopt", label: "Document, train, and refine so teams actually use the new system." }
     ]
   },
   services: {
-    eyebrow: "Counter specials",
-    title: "Services packed like the good stuff on the top shelf.",
+    eyebrow: "Department directory",
+    title: "AI and data services by department.",
     description:
-      "Choose a focused sprint or combine aisles for a full identity-to-launch build.",
+      "Move through the Retro AI Office to see where I help teams improve visibility, automate repetitive work, and make faster decisions.",
     items: [
       {
-        eyebrow: "Aisle 01",
-        title: "Editorial Websites",
+        eyebrow: "Desk 01",
+        title: "AI Workflow Automation",
         description:
-          "Bold portfolio, studio, and product sites with art direction, responsive systems, animation, and Vercel deployment.",
-        tags: ["Next.js", "Tailwind", "Motion"]
+          "Automations for approvals, reporting, document processing, CRM updates, intake forms, and recurring admin work.",
+        tags: ["AI Agents", "Zapier", "Make"]
       },
       {
-        eyebrow: "Aisle 02",
-        title: "CMS Architecture",
+        eyebrow: "Desk 02",
+        title: "Dashboards and BI",
         description:
-          "Sanity schemas, previews, and author-friendly content controls that keep every headline, image, and link editable.",
-        tags: ["Sanity", "GROQ", "Content Ops"]
+          "Executive dashboards and operational reports that make KPIs, bottlenecks, revenue, and forecasts easier to read.",
+        tags: ["Power BI", "Looker", "Sheets"]
       },
       {
-        eyebrow: "Aisle 03",
-        title: "Product Prototypes",
+        eyebrow: "Desk 03",
+        title: "Data Pipelines",
         description:
-          "Clickable, investor-ready flows that test messaging, interaction patterns, and technical direction before the build gets heavy.",
-        tags: ["UX", "React", "Strategy"]
+          "ELT/ETL workflows that clean exports, connect systems, standardize metrics, and reduce manual spreadsheet work.",
+        tags: ["SQL", "Python", "APIs"]
       },
       {
-        eyebrow: "Aisle 04",
-        title: "Launch Polish",
+        eyebrow: "Desk 04",
+        title: "AI Consulting",
         description:
-          "Performance tuning, accessibility passes, animation refinement, QA, analytics, and handoff docs for calm launch days.",
-        tags: ["A11y", "QA", "Vercel"]
+          "AI readiness audits, tool selection, implementation plans, guardrails, prompt systems, and team enablement.",
+        tags: ["Strategy", "RAG", "Training"]
       }
     ]
   },
   projects: {
-    eyebrow: "Featured projects",
-    title: "Recent goods from the cold case.",
+    eyebrow: "Proof of work",
+    title: "Case files from the analytics cabinet.",
     description:
       "Each case study can be edited in Sanity with custom imagery, links, categories, years, and tags.",
     items: [
@@ -101,14 +103,14 @@ export const fallbackPortfolioPage: PortfolioPage = {
         _id: "fallback-project-1",
         title: "Northstar Pantry",
         excerpt:
-          "A premium content hub and lead-generation system for a climate analytics startup entering a crowded market.",
-        category: "SaaS Website",
+          "A decision dashboard that combined marketing, revenue, and finance exports into one executive operating view.",
+        category: "BI Dashboard",
         year: "2026",
         image: {
           fallbackSrc: marketImage,
           alt: "Original product shelf visual for Northstar Pantry"
         },
-        tags: ["Positioning", "Next.js", "CMS"],
+        tags: ["Power BI", "ELT", "KPI Design"],
         link: { label: "View Case Study", href: "#" },
         accent: "#ef3e36"
       },
@@ -116,14 +118,14 @@ export const fallbackPortfolioPage: PortfolioPage = {
         _id: "fallback-project-2",
         title: "Parcel Club",
         excerpt:
-          "A playful storefront and member portal for a local delivery collective with weekly drops and editorial inventory.",
-        category: "Commerce",
+          "A workflow automation system for intake, routing, follow-ups, and weekly performance reporting.",
+        category: "Automation",
         year: "2025",
         image: {
           fallbackSrc: marketImage,
           alt: "Original product shelf visual for Parcel Club"
         },
-        tags: ["Art Direction", "React", "Systems"],
+        tags: ["Make", "CRM", "Ops"],
         link: { label: "View Case Study", href: "#" },
         accent: "#f3c623"
       },
@@ -131,59 +133,59 @@ export const fallbackPortfolioPage: PortfolioPage = {
         _id: "fallback-project-3",
         title: "Signal Room",
         excerpt:
-          "An internal operating dashboard redesigned around faster scanning, cleaner content models, and executive-ready reporting.",
-        category: "Product UI",
+          "A prototype AI assistant for searching internal SOPs, summarizing requests, and escalating exceptions.",
+        category: "AI Assistant",
         year: "2025",
         image: {
           fallbackSrc: marketImage,
           alt: "Original product shelf visual for Signal Room"
         },
-        tags: ["Dashboard", "UX", "Frontend"],
+        tags: ["RAG", "Docs", "Review Loop"],
         link: { label: "View Case Study", href: "#" },
         accent: "#1ba784"
       }
     ]
   },
   experience: {
-    eyebrow: "Shelf history",
-    title: "A career built across brand, product, and frontend delivery.",
+    eyebrow: "Work history",
+    title: "Experience across analytics, automation, and AI implementation.",
     description:
       "Replace these entries with roles, residencies, collaborations, or client chapters in Sanity.",
     items: [
       {
         _id: "fallback-exp-1",
-        role: "Independent Design Engineer",
-        company: "Alex Carter Studio",
+        role: "Independent Data & AI Consultant",
+        company: "AI Office Studio",
         timeframe: "2022 - Present",
         summary:
-          "Partnered with early-stage teams and creative studios to turn strategy into fast, distinctive, CMS-powered digital launches.",
-        tags: ["Strategy", "Design Systems", "Next.js"]
+          "Partner with small businesses and teams to audit processes, build dashboards, automate workflows, and implement practical AI systems.",
+        tags: ["AI Automation", "Dashboards", "Consulting"]
       },
       {
         _id: "fallback-exp-2",
-        role: "Senior Frontend Developer",
+        role: "Data Analyst",
         company: "Market Lane Labs",
         timeframe: "2019 - 2022",
         summary:
-          "Led frontend architecture for content-heavy product experiences, improving speed, accessibility, and editorial flexibility.",
-        tags: ["React", "Performance", "A11y"]
+          "Built reporting systems, cleaned datasets, defined KPIs, and helped operations leaders make better weekly decisions.",
+        tags: ["SQL", "BI", "Operations"]
       },
       {
         _id: "fallback-exp-3",
-        role: "Brand Systems Designer",
+        role: "Automation Specialist",
         company: "Counterform Studio",
         timeframe: "2016 - 2019",
         summary:
-          "Built visual systems, campaign pages, and interactive prototypes for founders preparing high-stakes releases.",
-        tags: ["Identity", "Prototyping", "Launches"]
+          "Designed no-code and low-code automations across sales, finance, marketing, and internal admin workflows.",
+        tags: ["Zapier", "APIs", "Process Design"]
       }
     ]
   },
   contact: {
-    eyebrow: "Ring the bell",
-    title: "Bring a rough idea. Leave with the good stuff.",
+    eyebrow: "Request form",
+    title: "Bring a messy workflow. Leave with a smarter office system.",
     description:
-      "Available for focused website builds, Sanity migrations, launch polish, and product storytelling sprints.",
+      "Available for AI readiness audits, dashboard builds, workflow automation, data pipeline projects, and practical AI implementation sprints.",
     availabilityLabel: "Currently booking",
     availabilityText: "June and July build slots",
     channels: [
