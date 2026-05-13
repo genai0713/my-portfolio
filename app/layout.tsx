@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
 import { SmoothScrollProvider } from "@/components/SmoothScrollProvider";
+import { WhisperAIWidget } from "@/components/WhisperAIWidget";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -24,6 +25,7 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <SmoothScrollProvider>{children}</SmoothScrollProvider>
+        <WhisperAIWidget />
       </body>
     </html>
   );
